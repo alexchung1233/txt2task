@@ -14,10 +14,9 @@ else
   exit 1
 fi
 
-# Required env vars: LINEAR_API_KEY, LINEAR_TEAM_ID, TODOIST_API_KEY, PHONE
+# Required env vars: LINEAR_API_KEY, LINEAR_TEAM_ID, PHONE
 : "${LINEAR_API_KEY:?LINEAR_API_KEY not set}"
 : "${LINEAR_TEAM_ID:?LINEAR_TEAM_ID not set}"
-: "${TODOIST_API_KEY:?TODOIST_API_KEY not set}"
 : "${PHONE:?PHONE not set}"
 
 STATE_FILE="${STATE_FILE:-$HOME/.imessage_to_linear_last_rowid}"
@@ -39,13 +38,13 @@ while IFS= read -r msg; do
       \"query\": \"mutation { issueCreate(input: { teamId: \\\"$LINEAR_TEAM_ID\\\", title: \\\"$escaped\\\", description: \\\"From iMessage\\\" }) { success issue { id title } } }\"
     }"
 
-  # Create Todoist task
-  curl -s -X POST https://api.todoist.com/api/v1/tasks \
-    -H "Authorization: Bearer $TODOIST_API_KEY" \
-    -H "Content-Type: application/json" \
-    -d "{\"content\": \"$escaped\", \"description\": \"From iMessage\"}"
+  # Create Todoist task (disabled)
+  # curl -s -X POST https://api.todoist.com/api/v1/tasks \
+  #   -H "Authorization: Bearer $TODOIST_API_KEY" \
+  #   -H "Content-Type: application/json" \
+  #   -d "{\"content\": \"$escaped\", \"description\": \"From iMessage\"}"
 
-  echo "$(date '+%Y-%m-%d %H:%M:%S') Created issue + task: $msg"
+  echo "$(date '+%Y-%m-%d %H:%M:%S') Created issue: $msg"
 done < <(python3 -c "
 import sqlite3, re, os
 
