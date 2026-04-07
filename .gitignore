@@ -1,0 +1,4 @@
+.env
+*.log
+.imessage_to_linear_last_rowid
+.DS_Store
